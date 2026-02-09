@@ -349,6 +349,7 @@ class Bill_App:
         op = messagebox.askyesno("Save Bill", "Do you want to save the bill?")
         if op > 0:
             self.bill_data = self.txtarea.get('1.0', END)
+            os.makedirs("bills", exist_ok=True)
             f1 = open("bills/"+str(self.bill_no.get())+".txt", "w")
             f1.write(self.bill_data)
             f1.close()
@@ -358,6 +359,9 @@ class Bill_App:
 
     # ===================find_bill================================
     def find_bill(self):
+        if not os.path.exists("bills"):
+            messagebox.showerror("Error", "Invalid Bill No")
+            return
         present = "no"
         for i in os.listdir("bills/"):
             if i.split('.')[0] == self.search_bill.get():
@@ -365,7 +369,7 @@ class Bill_App:
                 self.txtarea.delete("1.0", END)
                 for d in f1:
                     self.txtarea.insert(END, d)
-                    f1.close()
+                f1.close()
                 present = "yes"
         if present == "no":
             messagebox.showerror("Error", "Invalid Bill No")
